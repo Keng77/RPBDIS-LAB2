@@ -93,7 +93,7 @@ public class Program
 
     static void FilterFromOneSide(InspectionsDbContext db)
     {
-        string comment = "Фильтрация данных из таблицы (один)";
+        string comment = "Фильтрация данных из таблицы нарушений с штрафом больше 3000";
         // Условие: выбираем типы нарушений с штрафом больше 3000
         decimal penaltyThreshold = 3000;
 
@@ -129,14 +129,41 @@ public class Program
 
     static void SelectFromTwoTablesOneToMany(InspectionsDbContext db)
     {
-        comment = "Выборка данных из двух связанных таблиц (один-ко-многим)";
-        // Реализация выборки данных из двух таблиц
+        string comment = "Выборка данных из таблиц 'Предприятие' и 'Проверки'";
+
+        var query = from enterprise in db.Enterprises
+                    join inspection in db.Inspections on enterprise.EnterpriseId equals inspection.EnterpriseId
+                    select new
+                    {
+                        EnterpriseName = enterprise.Name,
+                        InspectionDate = inspection.InspectionDate
+                    };
+
+        var results = query.ToList();
+
+        Print(comment, results.Take(5));
     }
 
     static void FilterFromTwoTablesOneToMany(InspectionsDbContext db)
     {
-        comment = "Фильтрация данных из двух связанных таблиц (один-ко-многим)";
-        // Реализация фильтрации данных из двух таблиц
+        string comment = "Фильтрация данных из двух связанных таблиц (один-ко-многим)";
+        decimal penaltyThreshold = 50000;
+
+        var filteredData = db.Enterprises
+                .GroupJoin(db.Inspections,
+                          enterprise => enterprise.EnterpriseId,
+                          inspection => inspection.EnterpriseId,
+                          (enterprise, inspections) => new
+                          {
+                              EnterpriseName = enterprise.Name,
+                              InspectionCount = inspections.Count(),
+                              TotalPenaltyAmount = inspections.Sum(i => i.PenaltyAmount)
+                          })
+                .Where(result => result.InspectionCount > 0 && result.TotalPenaltyAmount > penaltyThreshold)
+                .OrderByDescending(result => result.TotalPenaltyAmount) // Сортировка по убыванию
+                .ToList();
+
+        Print(comment, filteredData.Take(5));
     }
 
     static void InsertIntoOneSide(InspectionsDbContext db)
