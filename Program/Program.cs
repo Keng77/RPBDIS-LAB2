@@ -238,7 +238,7 @@ public class Program
         .OrderByDescending(i => i.InspectionId) // Сортировка по убыванию ID
         .Take(5) // Выборка первых 5 записей
         .ToList();
-
+         
         Print(comment2, lastFiveInspections); // Печать последних 5 проверок
     }
 
