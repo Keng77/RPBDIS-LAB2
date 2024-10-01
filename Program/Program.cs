@@ -69,7 +69,7 @@ public class Program
                     break;
             }
 
-            Console.WriteLine("Нажмите любую клавишу для продолжения...");
+            Console.WriteLine("Нажмите любую клавишу чтобы вернутся к меню...");
             Console.ReadKey();
         }
     }
@@ -93,14 +93,38 @@ public class Program
 
     static void FilterFromOneSide(InspectionsDbContext db)
     {
-        comment = "Фильтрация данных из таблицы (один)";
-        // Реализация фильтрации данных
+        string comment = "Фильтрация данных из таблицы (один)";
+        // Условие: выбираем типы нарушений с штрафом больше 3000
+        decimal penaltyThreshold = 3000;
+
+        var violationTypes = db.ViolationTypes
+            .Where(vt => vt.PenaltyAmount > penaltyThreshold)
+            .Select(vt => new
+            {
+                vt.ViolationTypeId,
+                vt.Name,
+                vt.PenaltyAmount,
+                vt.CorrectionPeriodDays
+            });
+
+        Print(comment, violationTypes.Take(5).ToList());
     }
 
     static void GroupDataFromManySide(InspectionsDbContext db)
     {
-        comment = "Группировка данных (многие)";
-        // Реализация группировки данных
+        string comment = "Группировка данных по типам нарушений";
+
+        var groupedData = db.Inspections
+            .GroupBy(i => i.ViolationTypeId)
+            .Select(g => new
+            {
+                ViolationTypeId = g.Key,
+                InspectionCount = g.Count(),
+                TotalPenaltyAmount = g.Sum(i => i.PenaltyAmount)
+            })
+            .ToList();
+
+        Print(comment, groupedData.Take(5));
     }
 
     static void SelectFromTwoTablesOneToMany(InspectionsDbContext db)
