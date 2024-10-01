@@ -9,7 +9,8 @@
 *.user
 *.userosscache
 *.sln.docstates
-
+# Игнорируем файл конфигурации
+bin/Debug/net8.0/appsettings.json
 # User-specific files (MonoDevelop/Xamarin Studio)
 *.userprefs
 
