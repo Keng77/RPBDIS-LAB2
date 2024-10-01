@@ -76,7 +76,7 @@ public class Program
 
     static void SelectAllFromOneSide(InspectionsDbContext db)
     {
-        comment = "Выборка всех данных из таблицы (один)";
+        comment = "Выборка всех данных из таблицы Предприятия";
         // Реализация выборки данных
         var sqlQuery = db.Enterprises.Select(e => new
         {
@@ -93,7 +93,7 @@ public class Program
 
     static void FilterFromOneSide(InspectionsDbContext db)
     {
-        string comment = "Фильтрация данных из таблицы нарушений с штрафом больше 3000";
+        string comment = "Фильтрация данных из таблицы Нарушений с штрафом больше 3000";
         // Условие: выбираем типы нарушений с штрафом больше 3000
         decimal penaltyThreshold = 3000;
 
@@ -146,7 +146,7 @@ public class Program
 
     static void FilterFromTwoTablesOneToMany(InspectionsDbContext db)
     {
-        string comment = "Фильтрация данных из двух связанных таблиц (один-ко-многим)";
+        string comment = "Фильтрация данных из двух связанных таблиц по уменьшения задолжености";
         decimal penaltyThreshold = 50000;
 
         var filteredData = db.Enterprises
@@ -205,7 +205,7 @@ public class Program
 
     static void InsertIntoManySide(InspectionsDbContext db)
     {
-        string comment1 = "Вставка данных в таблицу (многие)";
+        string comment1 = "Вставка новой проверки";
 
         // Пример данных для вставки
         var inspection = new Inspection
