@@ -93,21 +93,23 @@ public class Program
 
     static void FilterFromOneSide(InspectionsDbContext db)
     {
-        string comment = "Фильтрация данных из таблицы Нарушений с штрафом больше 3000";
-        // Условие: выбираем типы нарушений с штрафом больше 3000
-        decimal penaltyThreshold = 3000;
+        string comment = "Фильтрация данных: выбираем предприятия, где имя и адрес начинаются с буквы G";
 
-        var violationTypes = db.ViolationTypes
-            .Where(vt => vt.PenaltyAmount > penaltyThreshold)
-            .Select(vt => new
+        var enterprises = db.Enterprises
+            .Where(e => e.Name.Length > 0 && e.Address.Length > 0 &&
+                        e.Name.ToLower().StartsWith("G") &&
+                        e.Address.ToLower().StartsWith("G"))
+            .Select(e => new
             {
-                vt.ViolationTypeId,
-                vt.Name,
-                vt.PenaltyAmount,
-                vt.CorrectionPeriodDays
+                e.EnterpriseId,
+                e.Name,
+                e.Address,
+                e.OwnershipType,
+                e.DirectorName,
+                e.DirectorPhone
             });
 
-        Print(comment, violationTypes.Take(5).ToList());
+        Print(comment, enterprises.ToList());
     }
 
     static void GroupDataFromManySide(InspectionsDbContext db)
@@ -308,7 +310,7 @@ public class Program
             throw new Exception("Нет предприятий с долгом для обновления.");
         }
 
-        // Обновление записей: увеличение суммы штрафа на 10% для всех проверок данного предприятия
+        // Обновление записей: увеличение суммы штрафа на 1% для всех проверок данного предприятия
         foreach (var enterprise in enterprisesToUpdate)
         {
             var inspectionsToUpdate = db.Inspections
@@ -317,7 +319,7 @@ public class Program
 
             foreach (var inspection in inspectionsToUpdate)
             {
-                inspection.PenaltyAmount *= 1.01m; // Увеличение на 10%
+                inspection.PenaltyAmount *= 1.01m; // Увеличение на 1%
             }
         }
 
