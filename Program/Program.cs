@@ -229,7 +229,7 @@ public class Program
 
         // Сохранение изменений в базе данных
         db.SaveChanges();
-
+         
         // Печать информации о новой проверке
         Print(comment1, new List<Inspection> { inspection });
 
