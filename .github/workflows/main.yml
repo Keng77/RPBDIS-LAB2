@@ -1,0 +1,36 @@
+name: CI
+
+on:
+  push:
+    branches:
+      - main
+  pull_request:
+
+jobs:
+  build-windows:
+    runs-on: windows-latest
+    steps:
+      - name: Проверка исходного кода
+        uses: actions/checkout@v2
+
+      - name: Установка .NET
+        uses: dotnet/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x' # Укажите нужную версию .NET
+
+      - name: Сборка проекта
+        run: dotnet build
+
+  build-linux:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Проверка исходного кода
+        uses: actions/checkout@v2
+
+      - name: Установка .NET
+        uses: dotnet/setup-dotnet@v1
+        with:
+          dotnet-version: '8.0.x' # Укажите нужную версию .NET
+
+      - name: Сборка проекта
+        run: dotnet build
