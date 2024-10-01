@@ -16,7 +16,7 @@ jobs:
       - name: Установка .NET
         uses: dotnet/setup-dotnet@v1
         with:
-          dotnet-version: '8.0.x' # Укажите нужную версию .NET
+          dotnet-version: '8.0.0'
 
       - name: Сборка проекта
         run: dotnet build
@@ -30,7 +30,7 @@ jobs:
       - name: Установка .NET
         uses: dotnet/setup-dotnet@v1
         with:
-          dotnet-version: '8.0.x' # Укажите нужную версию .NET
+          dotnet-version: '8.0.0' 
 
       - name: Сборка проекта
         run: dotnet build
