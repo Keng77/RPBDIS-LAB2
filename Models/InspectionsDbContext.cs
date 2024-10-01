@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
+using RPBDISLAB2.Views;
 
 namespace RPBDISLAB2.Models;
 

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace RPBDISLAB2;
+namespace RPBDISLAB2.Views;
 
 public partial class VInspectorWork
 {
