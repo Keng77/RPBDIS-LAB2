@@ -31,7 +31,7 @@ public partial class InspectionsDbContext : DbContext
     public virtual DbSet<ViolationType> ViolationTypes { get; set; }
 
    
-
+     
     protected override void OnModelCreating(ModelBuilder modelBuilder)
     {
         modelBuilder.Entity<Enterprise>(entity =>
