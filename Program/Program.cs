@@ -244,14 +244,42 @@ public class Program
 
     static void DeleteFromOneSide(InspectionsDbContext db)
     {
-        comment = "Удаление данных из таблицы (один)";
-        // Реализация удаления данных
+        // Получение последнего предприятия
+        var lastEnterprise = db.Enterprises
+            .OrderByDescending(e => e.EnterpriseId) // Сортировка по убыванию ID
+            .FirstOrDefault(); // Получение первого результата (последнее предприятие)
+
+        if (lastEnterprise == null)
+        {
+            throw new Exception("Нет предприятий для удаления.");           
+        }
+
+        // Удаление последнего предприятия из контекста
+        db.Enterprises.Remove(lastEnterprise);
+        db.SaveChanges(); // Сохранение изменений в базе данных
+
+        // Вывод информации о удаленном предприятии
+        Print($"Предприятие с ID {lastEnterprise.EnterpriseId} успешно удалено.", new List<Enterprise> { lastEnterprise });
     }
 
     static void DeleteFromManySide(InspectionsDbContext db)
     {
-        comment = "Удаление данных из таблицы (многие)";
-        // Реализация удаления данных
+        // Получение последней проверки
+        var lastInspection = db.Inspections
+            .OrderByDescending(i => i.InspectionId) // Сортировка по убыванию ID
+            .FirstOrDefault(); // Получение первого результата (последняя проверка)
+
+        if (lastInspection == null)
+        {
+            throw new Exception("Нет проверок для удаления.");
+        }
+
+        // Удаление последней проверки из контекста
+        db.Inspections.Remove(lastInspection);
+        db.SaveChanges(); // Сохранение изменений в базе данных
+
+        // Вывод информации о удаленной проверке
+        Print($"Проверка с ID {lastInspection.InspectionId} успешно удалена.", new List<Inspection> { lastInspection });
     }
 
     static void UpdateRecords(InspectionsDbContext db)
