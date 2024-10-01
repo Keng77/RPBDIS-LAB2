@@ -1,36 +1,44 @@
-name: CI
+name: Build C# Project
 
 on:
   push:
     branches:
       - master
   pull_request:
+    branches:
+      - master
 
 jobs:
   build-windows:
     runs-on: windows-latest
     steps:
-      - name: Проверка исходного кода
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Установка .NET
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '8.0.0'  # Укажите нужную версию .NET
+          dotnet-version: '8.0.0'  
 
-      - name: Сборка проекта
-        run: dotnet build
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
 
   build-linux:
     runs-on: ubuntu-latest
     steps:
-      - name: Проверка исходного кода
+      - name: Checkout code
         uses: actions/checkout@v2
 
-      - name: Установка .NET
-        uses: actions/setup-dotnet@v3
+      - name: Setup .NET
+        uses: actions/setup-dotnet@v2
         with:
-          dotnet-version: '8.0.0'  # Укажите нужную версию .NET
+          dotnet-version: '8.0.0'  
 
-      - name: Сборка проекта
-        run: dotnet build
+      - name: Restore dependencies
+        run: dotnet restore
+
+      - name: Build project
+        run: dotnet build --configuration Release
