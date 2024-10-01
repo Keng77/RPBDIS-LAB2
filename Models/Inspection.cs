@@ -34,4 +34,20 @@ public partial class Inspection
     public virtual Inspector Inspector { get; set; } = null!;
 
     public virtual ViolationType ViolationType { get; set; } = null!;
+
+    public override string ToString()
+    {
+        return $"Inspection ID: {InspectionId}\n" +
+               $"Inspector ID: {InspectorId}\n" +
+               $"Enterprise ID: {EnterpriseId}\n" +
+               $"Inspection Date: {InspectionDate}\n" +
+               $"Protocol Number: {ProtocolNumber}\n" +
+               $"Violation Type ID: {ViolationTypeId}\n" +
+               $"Responsible Person: {ResponsiblePerson}\n" +
+               $"Penalty Amount: {PenaltyAmount}\n" +
+               $"Payment Deadline: {PaymentDeadline}\n" +
+               $"Correction Deadline: {CorrectionDeadline}\n" +
+               $"Payment Status: {PaymentStatus}\n" +
+               $"Correction Status: {CorrectionStatus}";
+    }
 }

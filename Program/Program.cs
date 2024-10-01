@@ -168,14 +168,78 @@ public class Program
 
     static void InsertIntoOneSide(InspectionsDbContext db)
     {
-        comment = "Вставка данных в таблицу (один)";
-        // Реализация вставки данных
+        string comment1 = "Вставка нового предприятия";
+
+        // Создание нового объекта предприятия с заранее заданными значениями
+        var newEnterprise = new Enterprise
+        {
+            Name = "AMAZON",
+            OwnershipType = "OAO",
+            Address = "KONECHAYA 1",
+            DirectorName = "DJEF BEZOS",
+            DirectorPhone = "71234567890"
+        };
+
+        // Добавление нового предприятия в контекст
+        db.Enterprises.Add(newEnterprise);
+
+        // Сохранение изменений в базе данных
+        db.SaveChanges();
+
+        // Вывод информации о новом предприятии
+        Print(comment1, new List<Enterprise> { newEnterprise });
+
+        // Вывод последних 5 предприятий, включая только что добавленное
+
+        string comment2 = "Запись успешно вставлена. Вывожу послежние записи в таблице Предприятия:";
+
+        // Получение последних 5 предприятий из базы данных
+        var lastFiveEnterprises = db.Enterprises
+            .OrderByDescending(e => e.EnterpriseId) // Сортировка по убыванию ID
+            .Take(5) // Выборка первых 5 записей
+            .ToList();
+
+        Print(comment2, lastFiveEnterprises); // Передаем список последних 5 предприятий
     }
+
 
     static void InsertIntoManySide(InspectionsDbContext db)
     {
-        comment = "Вставка данных в таблицу (многие)";
-        // Реализация вставки данных
+        string comment1 = "Вставка данных в таблицу (многие)";
+
+        // Пример данных для вставки
+        var inspection = new Inspection
+        {
+            InspectorId = 1, // Предполагается, что инспектор с ID 1 существует
+            EnterpriseId = 5, // Предполагается, что предприятие с ID 5 существует
+            InspectionDate = DateOnly.FromDateTime(DateTime.Now),
+            ProtocolNumber = "PR_2024_001",
+            ViolationTypeId = 2, // Предполагается, что тип нарушения с ID 2 существует
+            ResponsiblePerson = "Keng32",
+            PenaltyAmount = 5002,
+            PaymentDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(30)),
+            CorrectionDeadline = DateOnly.FromDateTime(DateTime.Now.AddDays(60)),
+            PaymentStatus = "Не оплачено",
+            CorrectionStatus = "Не исправлено"
+
+        };
+
+        // Добавление новой проверки в контекст
+        db.Inspections.Add(inspection);
+
+        // Сохранение изменений в базе данных
+        db.SaveChanges();
+
+        // Печать информации о новой проверке
+        Print(comment1, new List<Inspection> { inspection });
+
+        var comment2 = "Запись успешно вставлена. Вывожу послежние записи в таблице Проверок";
+        var lastFiveInspections = db.Inspections
+        .OrderByDescending(i => i.InspectionId) // Сортировка по убыванию ID
+        .Take(5) // Выборка первых 5 записей
+        .ToList();
+
+        Print(comment2, lastFiveInspections); // Печать последних 5 проверок
     }
 
     static void DeleteFromOneSide(InspectionsDbContext db)
@@ -196,18 +260,21 @@ public class Program
         // Реализация обновления данных
     }
 
+    
+
     static void Print(string comment, IEnumerable items)
     {
         Console.WriteLine();
         Console.WriteLine(comment);
         Console.WriteLine();
         Console.WriteLine("Записи: ");
+        Console.WriteLine();
         foreach (var item in items)
         {
             Console.WriteLine(item.ToString());
             Console.WriteLine();
         }
         Console.WriteLine();
-        Console.ReadKey();
+        
     }
 }
