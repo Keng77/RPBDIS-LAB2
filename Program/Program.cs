@@ -284,11 +284,51 @@ public class Program
 
     static void UpdateRecords(InspectionsDbContext db)
     {
-        comment = "Обновление записей в таблице";
-        // Реализация обновления данных
+        // Максимальное значение для сравнения
+        decimal maxDebtThreshold = 400000m;
+
+        // Получение всех предприятий с суммой долгов по проверкам
+        var enterprisesWithDebts = db.Enterprises
+            .Select(e => new
+            {
+                EnterpriseId = e.EnterpriseId,
+                TotalDebt = db.Inspections
+                    .Where(i => i.EnterpriseId == e.EnterpriseId)
+                    .Sum(i => i.PenaltyAmount)
+            })
+            .ToList();
+
+        // Фильтрация предприятий, у которых сумма долгов больше максимального значения
+        var enterprisesToUpdate = enterprisesWithDebts
+            .Where(e => e.TotalDebt > maxDebtThreshold)
+            .ToList();
+
+        if (enterprisesToUpdate.Count == 0)
+        {
+            throw new Exception("Нет предприятий с долгом для обновления.");
+        }
+
+        // Обновление записей: увеличение суммы штрафа на 10% для всех проверок данного предприятия
+        foreach (var enterprise in enterprisesToUpdate)
+        {
+            var inspectionsToUpdate = db.Inspections
+                .Where(i => i.EnterpriseId == enterprise.EnterpriseId)
+                .ToList();
+
+            foreach (var inspection in inspectionsToUpdate)
+            {
+                inspection.PenaltyAmount *= 1.01m; // Увеличение на 10%
+            }
+        }
+
+        // Сохранение изменений в базе данных
+        db.SaveChanges();
+
+        // Вывод информации об обновленных записях
+        Print($"Обновлено записей для предприятий с долгом больше {maxDebtThreshold}: {enterprisesToUpdate.Count}", enterprisesToUpdate);
     }
 
-    
+
 
     static void Print(string comment, IEnumerable items)
     {
